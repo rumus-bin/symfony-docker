@@ -1,7 +1,8 @@
-FROM php:8.1-fpm-buster
+FROM php:8.2-rc-fpm
 ARG TIMEZONE
 
 COPY php.ini /usr/local/etc/php/conf.d/docker-php-config.ini
+COPY xdebug.ini /usr/local/php/conf.d/99-xdebug.ini
 
 RUN apt-get update && apt-get install -y \
     gnupg \
@@ -19,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxslt1-dev \
     acl \
+    && pecl install xdebug && docker-php-ext-enable xdebug \
     && echo 'alias sf="php bin/console"' >> ~/.bashrc
 
 RUN docker-php-ext-configure gd --with-jpeg --with-freetype 
